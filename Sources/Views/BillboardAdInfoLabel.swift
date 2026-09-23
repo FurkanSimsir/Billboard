@@ -26,8 +26,11 @@ struct BillboardAdInfoLabel: View {
                 .font(.system(size: 10, weight: .heavy, design: .rounded))
                 .foregroundColor(advert.tint)
                 .offset(x:0.5)
+                .fixedSize()
         }
-        .frame(width: 26, height: 16)
+        .padding(.horizontal, 6)
+        .frame(minWidth: 26)
+        .frame(height: 16)
         .background(advert.tint.quinary, in: .capsule)
         .accessibilityLabel(Text("Advertisement"))
         #endif
