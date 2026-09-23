@@ -15,17 +15,21 @@ public struct BillboardBannerView : View {
     let config : BillboardConfiguration
     let includeShadow : Bool
     let hideDismissButtonAndTimer : Bool
+    let concentricCorners : Bool
     
     @State private var canDismiss = false
     @State private var appIcon : UIImage? = nil
     @State private var showAdvertisement = true
     @State private var loadingNewIcon = true
     
-    public init(advert: BillboardAd, config: BillboardConfiguration = BillboardConfiguration(), includeShadow: Bool = true, hideDismissButtonAndTimer: Bool = false) {
+    /// - Parameter concentricCorners: On iOS 26 and later, the corners follow the container (for example the
+    ///   display corners when the banner sits at the bottom of the screen) and never go below the default radius.
+    public init(advert: BillboardAd, config: BillboardConfiguration = BillboardConfiguration(), includeShadow: Bool = true, hideDismissButtonAndTimer: Bool = false, concentricCorners: Bool = false) {
         self.advert = advert
         self.config = config
         self.includeShadow = includeShadow
         self.hideDismissButtonAndTimer = hideDismissButtonAndTimer
+        self.concentricCorners = concentricCorners
     }
     
     public var body: some View {
@@ -247,7 +251,7 @@ public struct BillboardBannerView : View {
                         }
                     }
                     .frame(width: 60, height: 60)
-                    .clipShape(.rect(cornerRadius: 13))
+                    .clipShape(roundedShape(radius: 13))
                     .accessibilityHidden(true)
                     .transition(.blurReplace)
                     .animation(.default, value: loadingNewIcon)
@@ -303,12 +307,12 @@ public struct BillboardBannerView : View {
         .accessibilityLabel(Text("\(advert.name), \(advert.title)"))
         .padding(10)
         .background {
-            RoundedRectangle(cornerRadius: 23, style: .continuous)
+            roundedShape(radius: 23)
                 .fill(advert.background.gradient)
                 .stroke(Color.primary.opacity(0.1), lineWidth: 1)
                 .shadow(color: includeShadow ? advert.background.opacity(0.5) : Color.clear, radius: 6, x: 0, y: 2)
         }
-        .contentShape(.rect(cornerRadius: 18, style: .continuous))
+        .contentShape(roundedShape(radius: 23))
         .animation(.spring(), value: showAdvertisement)
         .task {
             await fetchAppIcon()
@@ -326,6 +330,13 @@ public struct BillboardBannerView : View {
         
     }
     
+    
+    private func roundedShape(radius: CGFloat) -> AnyShape {
+        if #available(iOS 26.0, macOS 26.0, tvOS 26.0, visionOS 26.0, *), concentricCorners {
+            return AnyShape(ConcentricRectangle(corners: .concentric(minimum: .fixed(radius))))
+        }
+        return AnyShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+    }
     
     private func fetchAppIcon() async {
         defer { loadingNewIcon = false }
