@@ -53,16 +53,18 @@ public struct BillboardView<Content:View>: View {
                     }
                 }
                 
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showPaywall.toggle()
-                    } label: {
-                        Text("Remove Ads")
-                            .font(.system(.footnote, design: .rounded))
-                            .bold()
+                if config.showsRemoveAdsButton {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            showPaywall.toggle()
+                        } label: {
+                            Text("Remove Ads")
+                                .font(.system(.footnote, design: .rounded))
+                                .bold()
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
                 }
             }
         }
@@ -96,18 +98,20 @@ public struct BillboardView<Content:View>: View {
                 
                 Spacer()
                 
-                if #available(tvOS 26.0, *) {
-                    Button("Remove Ads") {
-                        showPaywall.toggle()
+                if config.showsRemoveAdsButton {
+                    if #available(tvOS 26.0, *) {
+                        Button("Remove Ads") {
+                            showPaywall.toggle()
+                        }
+                        .fontWeight(.bold)
+                        .buttonStyle(.glass)
+                    } else {
+                        Button("Remove Ads") {
+                            showPaywall.toggle()
+                        }
+                        .fontWeight(.bold)
+                        .buttonStyle(.bordered)
                     }
-                    .fontWeight(.bold)
-                    .buttonStyle(.glass)
-                } else {
-                    Button("Remove Ads") {
-                        showPaywall.toggle()
-                    }
-                    .fontWeight(.bold)
-                    .buttonStyle(.bordered)
                 }
                 
             }
@@ -147,12 +151,14 @@ public struct BillboardView<Content:View>: View {
                     }
                 }
                 
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Remove Ads") {
-                        showPaywall.toggle()
+                if config.showsRemoveAdsButton {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Remove Ads") {
+                            showPaywall.toggle()
+                        }
+                        .fontWeight(.bold)
+                        .controlSize(.small)
                     }
-                    .fontWeight(.bold)
-                    .controlSize(.small)
                 }
                 #endif
             }

@@ -121,6 +121,9 @@ public struct BillboardConfiguration {
     
     /// Provide a list of Apple ID's that you want to exclude from showing up (e.g. your own app)
     public let excludedIDs : [String]
+
+    /// Show the "Remove Ads" button that opens the paywall in `BillboardView`
+    public let showsRemoveAdsButton: Bool
     
     public init(adsJSONURL: URL? = URL(string:"https://billboard-source.vercel.app/ads.json"),
                 allowHaptics: Bool = true,

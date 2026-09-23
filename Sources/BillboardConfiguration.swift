@@ -23,18 +23,23 @@ public struct BillboardConfiguration {
     
     /// All Categories that should be included in the ads that are shown
     public let categories : [String]
+
+    /// Show the "Remove Ads" button that opens the paywall in `BillboardView`
+    public let showsRemoveAdsButton: Bool
     
     public init(
         adsJSONURL: URL? = URL(string:"https://billboard-source.vercel.app/ads.json"),
         allowHaptics: Bool = true,
         advertDuration: TimeInterval = 15.0,
         excludedIDs: [String] = [],
-        categories: [AdCategory] = AdCategory.allCases
+        categories: [AdCategory] = AdCategory.allCases,
+        showsRemoveAdsButton: Bool = true
     ) {
         self.adsJSONURL = adsJSONURL
         self.allowHaptics = allowHaptics
         self.duration = advertDuration
         self.excludedIDs = excludedIDs
         self.categories = categories.map { $0.rawValue }
+        self.showsRemoveAdsButton = showsRemoveAdsButton
     }
 }
